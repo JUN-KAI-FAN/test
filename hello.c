@@ -15,6 +15,7 @@ struct Node* insertAtHead(struct Node* head, int value) {
 }
 
 int total = 0; // 全域變數，儲存總和
+int aabb = 0; // 全域變數，儲存總和
 
 // 列印鏈結串列
 void printList(struct Node* head) {
