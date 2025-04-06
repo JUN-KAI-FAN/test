@@ -241,6 +241,68 @@ int main() {
 返回型別 (*指針名稱)(參數型別, ...);
 ```
 
+#### 函數指針範例
+```c
+#include <stdio.h>
+
+// 定義兩個簡單函數
+int add(int a, int b) {
+    return a + b;
+}
+
+int subtract(int a, int b) {
+    return a - b;
+}
+
+int calculate(int (*operation)(int, int), int x, int y) {
+    return operation(x, y);  // 透過函數指針呼叫函數
+}
+
+int main() {
+    // 聲明函數指針
+    int (*func_ptr)(int, int);
+    
+    // 指向 add 函數
+    func_ptr = add;
+    printf("使用函數指針呼叫 add: %d\n", func_ptr(5, 3));  // 輸出: 8
+    
+    // 指向 subtract 函數
+    func_ptr = subtract;
+    printf("使用函數指針呼叫 subtract: %d\n", func_ptr(5, 3));  // 輸出: 2
+    
+    // 透過 calculate 函數傳遞函數指針
+    printf("透過函數指針參數呼叫 add: %d\n", calculate(add, 5, 3));  // 輸出: 8
+    printf("透過函數指針參數呼叫 subtract: %d\n", calculate(subtract, 5, 3));  // 輸出: 2
+    
+    return 0;
+}
+```
+
+#### 函數指針陣列範例
+```c
+#include <stdio.h>
+
+int add(int a, int b) { return a + b; }
+int subtract(int a, int b) { return a - b; }
+int multiply(int a, int b) { return a * b; }
+int divide(int a, int b) { return (b != 0) ? (a / b) : 0; }
+
+int main() {
+    // 定義函數指針陣列
+    int (*operations[4])(int, int) = {add, subtract, multiply, divide};
+    char *op_names[4] = {"加法", "減法", "乘法", "除法"};
+    
+    int a = 10, b = 5;
+    
+    // 使用函數指針陣列調用不同函數
+    for (int i = 0; i < 4; i++) {
+        printf("%s結果: %d\n", op_names[i], operations[i](a, b));
+    }
+    
+    return 0;
+}
+```
+
 ## 10. 結構體與聯合體
 
 ### 結構體 (struct)
