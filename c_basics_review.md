@@ -448,3 +448,163 @@ int main() {
 ---
 
 這些題目涵蓋了指標、陣列、字串、運算子、靜態變數與結構體等 C 語言的核心概念，適合用於面試準備與基礎複習。
+
+## 16. 實用程式範例
+
+### 字串反轉
+```c
+#include <stdio.h>
+#include <string.h>
+
+void reverse_string(char* str) {
+    int length = strlen(str);
+    int i, j;
+    char temp;
+    
+    for (i = 0, j = length - 1; i < j; i++, j--) {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+}
+
+int main() {
+    char str[100];
+    
+    printf("請輸入一個字串: ");
+    gets(str);  // 注意: 實際應用中應使用 fgets 以避免緩衝區溢出
+    
+    printf("原始字串: %s\n", str);
+    reverse_string(str);
+    printf("反轉後字串: %s\n", str);
+    
+    return 0;
+}
+```
+
+### 檢查回文
+回文是指正著讀和反著讀都一樣的字詞或句子，例如「竹塹」、「上海自來水來自海上」。
+
+#### 方法一：使用迴圈比較
+```c
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>  // 用於 tolower 函數
+
+// 檢查字串是否為回文
+int is_palindrome(char* str) {
+    int left = 0;
+    int right = strlen(str) - 1;
+    
+    while (left < right) {
+        // 忽略非字母數字字符
+        while (left < right && !isalnum(str[left])) 
+            left++;
+        while (left < right && !isalnum(str[right])) 
+            right--;
+            
+        // 忽略大小寫差異
+        if (tolower(str[left]) != tolower(str[right]))
+            return 0;  // 不是回文
+            
+        left++;
+        right--;
+    }
+    
+    return 1;  // 是回文
+}
+
+int main() {
+    char str[100];
+    
+    printf("請輸入一個字串: ");
+    fgets(str, sizeof(str), stdin);
+    
+    // 移除換行符
+    if (str[strlen(str) - 1] == '\n')
+        str[strlen(str) - 1] = '\0';
+    
+    if (is_palindrome(str))
+        printf("\"%s\" 是回文\n", str);
+    else
+        printf("\"%s\" 不是回文\n", str);
+    
+    return 0;
+}
+```
+
+#### 方法二：反轉比較法
+```c
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+// 將字串轉為純字母數字，並轉換為小寫
+char* prepare_string(const char* input) {
+    int i, j = 0;
+    int len = strlen(input);
+    char* result = (char*)malloc(len + 1);
+    
+    for (i = 0; i < len; i++) {
+        if (isalnum(input[i])) {
+            result[j++] = tolower(input[i]);
+        }
+    }
+    result[j] = '\0';
+    return result;
+}
+
+// 反轉字串
+void reverse_string(char* str) {
+    int length = strlen(str);
+    int i, j;
+    char temp;
+    
+    for (i = 0, j = length - 1; i < j; i++, j--) {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+}
+
+// 檢查是否為回文
+int is_palindrome(const char* str) {
+    char* processed = prepare_string(str);
+    int len = strlen(processed);
+    
+    if (len <= 1) {
+        free(processed);
+        return 1;  // 空字串或單個字符視為回文
+    }
+    
+    char* reversed = (char*)malloc(len + 1);
+    strcpy(reversed, processed);
+    reverse_string(reversed);
+    
+    int result = (strcmp(processed, reversed) == 0);
+    
+    free(processed);
+    free(reversed);
+    
+    return result;
+}
+
+int main() {
+    char str[100];
+    
+    printf("請輸入一個字串: ");
+    fgets(str, sizeof(str), stdin);
+    
+    // 移除換行符
+    if (str[strlen(str) - 1] == '\n')
+        str[strlen(str) - 1] = '\0';
+    
+    if (is_palindrome(str))
+        printf("\"%s\" 是回文\n", str);
+    else
+        printf("\"%s\" 不是回文\n", str);
+    
+    return 0;
+}
+```
